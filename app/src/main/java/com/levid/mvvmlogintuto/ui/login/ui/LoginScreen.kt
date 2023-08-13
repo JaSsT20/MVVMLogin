@@ -17,21 +17,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.levid.mvvmlogintuto.R
+import com.levid.mvvmlogintuto.navigation.AppScreens
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
-fun LoginScreen(viewModel : LoginViewModel){
+fun LoginScreen(viewModel: LoginViewModel, navController: NavController){
     Box(
         Modifier
             .fillMaxSize()
             .padding(16.dp)){
-        Login(Modifier.align(Alignment.Center), viewModel)
+        Login(Modifier.align(Alignment.Center), viewModel, navController)
     }
 }
 
 @Composable
-fun Login(modifier: Modifier, viewModel: LoginViewModel) {
+fun Login(modifier: Modifier, viewModel: LoginViewModel, navController: NavController) {
     val email : String by viewModel.email.observeAsState(initial = "")
     val password : String by viewModel.password.observeAsState(initial = "")
     val loginEnable : Boolean by viewModel.loginEnable.observeAsState(initial = false)
@@ -53,7 +56,7 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
             Spacer(modifier = Modifier.padding(16.dp))
             ForgotPassword(Modifier.align(Alignment.End))
             Spacer(modifier = Modifier.padding(16.dp))
-            LoginButton(loginEnable) {
+            LoginButton(loginEnable, navController) {
                 coroutineScope.launch {
                     viewModel.onLoginSelected()
                 }
@@ -63,9 +66,12 @@ fun Login(modifier: Modifier, viewModel: LoginViewModel) {
 }
 
 @Composable
-fun LoginButton(loginEnable: Boolean, onLoginSelected: () -> Unit) {
+fun LoginButton(loginEnable: Boolean, navController: NavController, onLoginSelected: () -> Unit) {
     Button(
-        onClick = { onLoginSelected() },
+        onClick = {
+            navController.navigate(route = AppScreens.MainScreen.route)
+        },
+        //onClick = { onLoginSelected() },
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp),
